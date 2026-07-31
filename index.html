@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Echo Labs</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- ========================= MAIN MENU ========================= -->
+    <section id="screen-menu" class="screen">
+      <h1 class="title">ECHO<span>LABS</span></h1>
+      <p class="subtitle">every action leaves a ghost</p>
+      <nav class="menu-list">
+        <button class="menu-btn" data-action="play">▶ Play</button>
+        <button class="menu-btn" data-action="levels">Level Select</button>
+        <button class="menu-btn" data-action="settings">Settings</button>
+        <button class="menu-btn" data-action="credits">Credits</button>
+      </nav>
+      <p class="footer-hint">A / D move &middot; Space jump &middot; E interact &middot; R restart room</p>
+    </section>
+
+    <!-- ========================= LEVEL SELECT ========================= -->
+    <section id="screen-levels" class="screen hidden">
+      <h2 class="section-title">Select Level</h2>
+      <div id="level-grid" class="level-grid"></div>
+      <button class="menu-btn ghost-btn" data-action="back-to-menu">Back</button>
+    </section>
+
+    <!-- ========================= SETTINGS ========================= -->
+    <section id="screen-settings" class="screen hidden">
+      <h2 class="section-title">Settings</h2>
+      <div class="settings-row">
+        <label for="sfx-volume">SFX Volume</label>
+        <input type="range" id="sfx-volume" min="0" max="100" value="70" />
+      </div>
+      <div class="settings-row">
+        <label for="music-volume">Music Volume</label>
+        <input type="range" id="music-volume" min="0" max="100" value="35" />
+      </div>
+      <button class="menu-btn ghost-btn" data-action="reset-progress">Reset Progress</button>
+      <button class="menu-btn ghost-btn" data-action="back-to-menu">Back</button>
+    </section>
+
+    <!-- ========================= CREDITS ========================= -->
+    <section id="screen-credits" class="screen hidden">
+      <h2 class="section-title">Credits</h2>
+      <p class="credits-text">
+        Echo Labs<br/>
+        A puzzle-platformer about escaping your own past.<br/><br/>
+        Design, code, art &amp; sound — built from scratch,<br/>
+        no engine, no dependencies. Just a &lt;canvas&gt;.
+      </p>
+      <button class="menu-btn ghost-btn" data-action="back-to-menu">Back</button>
+    </section>
+
+    <!-- ========================= GAMEPLAY ========================= -->
+    <section id="screen-game" class="screen hidden">
+      <div id="hud">
+        <div id="hud-left">
+          <span id="hud-level">Level 1</span>
+        </div>
+        <div id="hud-center">
+          <span id="hud-timer-label">NEXT ECHO IN</span>
+          <span id="hud-timer">10</span>
+        </div>
+        <div id="hud-right">
+          <span id="hud-echoes">Echoes: 0 / 5</span>
+        </div>
+      </div>
+
+      <div id="canvas-container">
+        <canvas id="gameCanvas" width="800" height="450"></canvas>
+
+        <div id="hint-banner" class="hidden"></div>
+
+        <div id="pause-overlay" class="overlay hidden">
+          <h2>Paused</h2>
+          <button class="menu-btn" data-action="resume">Resume</button>
+          <button class="menu-btn ghost-btn" data-action="restart-room">Restart Room (R)</button>
+          <button class="menu-btn ghost-btn" data-action="quit-to-menu">Quit to Menu</button>
+        </div>
+
+        <div id="level-complete-overlay" class="overlay hidden">
+          <h2>Level Complete!</h2>
+          <p id="lc-time">Time: 00:00</p>
+          <p id="lc-echoes">Echoes Used: 0</p>
+          <p id="lc-stars" class="stars">☆☆☆</p>
+          <div class="overlay-btn-row">
+            <button class="menu-btn ghost-btn" data-action="replay-level">Replay</button>
+            <button class="menu-btn" data-action="next-level">Next Level</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="game-footer">
+        <span>A/D move &middot; Space jump &middot; E interact &middot; R restart &middot; Esc pause</span>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/ease.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/save.js"></script>
+  <script src="js/levels.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/camera.js"></script>
+  <script src="js/transitions.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
