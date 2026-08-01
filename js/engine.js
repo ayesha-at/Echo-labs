@@ -124,6 +124,30 @@ EL.Engine = (function () {
     if (player.vy > MAX_FALL) player.vy = MAX_FALL;
 
     player.x += player.vx;
+
+    // box pushing (live player only) — must run BEFORE resolveAxisCollision,
+    // since that resolver would otherwise stop the player exactly at the
+    // box's edge and the overlap this logic looks for would never happen
+    if (player.vx !== 0) {
+      const dir = player.vx > 0 ? 1 : -1;
+      for (const b of boxStates) {
+        if (!rectsOverlap(player, b)) continue;
+        const newX = b.x + dir * MOVE_SPEED;
+        const testBox = { ...b, x: newX };
+        const blocked = [...level.platforms, ...boxStates.filter((o) => o !== b)]
+          .some((s) => rectsOverlap(testBox, s));
+        const outOfBounds = newX < 0 || newX + b.w > WORLD_W;
+        if (!blocked && !outOfBounds) {
+          b.x = newX;
+          if (cycleStep % 6 === 0) {
+            EL.Particles.spawnBurst(b.x + (dir > 0 ? 0 : b.w), b.y + b.h, {
+              color: '#5a5f8a', count: 2, speed: 0.6, life: 0.2, size: 2, gravity: 0.1,
+            });
+          }
+        }
+      }
+    }
+
     resolveAxisCollision('x');
 
     player.y += player.vy;
@@ -140,32 +164,6 @@ EL.Engine = (function () {
       });
     }
     wasOnGround = player.onGround;
-
-    // box pushing (live player only)
-    if (player.vx !== 0) {
-      for (const b of boxStates) {
-        const pushingRight = player.vx > 0 && player.x + player.w > b.x && player.x + player.w < b.x + 14 &&
-          player.y + player.h > b.y + 4 && player.y < b.y + b.h - 4;
-        const pushingLeft = player.vx < 0 && player.x < b.x + b.w && player.x > b.x + b.w - 14 &&
-          player.y + player.h > b.y + 4 && player.y < b.y + b.h - 4;
-        if (pushingRight || pushingLeft) {
-          const dir = pushingRight ? 1 : -1;
-          const newX = b.x + dir * MOVE_SPEED;
-          const testBox = { ...b, x: newX };
-          const blocked = [...level.platforms, ...boxStates.filter((o) => o !== b)]
-            .some((s) => rectsOverlap(testBox, s));
-          const outOfBounds = newX < 0 || newX + b.w > WORLD_W;
-          if (!blocked && !outOfBounds) {
-            b.x = newX;
-            if (cycleStep % 6 === 0) {
-              EL.Particles.spawnBurst(b.x + (dir > 0 ? 0 : b.w), b.y + b.h, {
-                color: '#5a5f8a', count: 2, speed: 0.6, life: 0.2, size: 2, gravity: 0.1,
-              });
-            }
-          }
-        }
-      }
-    }
 
     if (player.y > WORLD_H + 60) { softResetRun(false); return; }
 
