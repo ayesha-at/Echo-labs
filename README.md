@@ -6,6 +6,8 @@ starts repeating exactly what you just did, forever, while you take control
 of your real body again. Use up to 5 echoes at once to hold plates, block
 lasers, and open doors for your current self.
 
+🎮 **[Play Live Demo Here](https://ayesha-at.github.io/Echo-labs/)**
+
 Built entirely from scratch: no engine, no frameworks, no build step — just
 `index.html` + `style.css` + `game.js` and the Canvas 2D API.
 
