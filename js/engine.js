@@ -40,6 +40,7 @@ EL.Engine = (function () {
   let hintTimer = 0;
   let echoFlashTimer = 0;
   let wasOnGround = false;
+  let manualEchoRequested = false;
 
   const listeners = {}; // simple event bus: 'levelComplete', 'echoCreated', etc.
   function on(evt, fn) { (listeners[evt] = listeners[evt] || []).push(fn); }
@@ -66,6 +67,7 @@ EL.Engine = (function () {
     hintTimer = 240;
     echoFlashTimer = 0;
     wasOnGround = false;
+    manualEchoRequested = false;
     EL.Particles.clear();
     emit('levelReset', level);
   }
@@ -208,7 +210,10 @@ EL.Engine = (function () {
     if (rectsOverlap(player, level.exit)) { completeLevel(); return; }
 
     cycleStep++;
-    if (cycleStep >= STEPS_PER_CYCLE) finalizeEcho();
+    if (cycleStep >= STEPS_PER_CYCLE || manualEchoRequested) {
+      manualEchoRequested = false;
+      finalizeEcho();
+    }
 
     elapsedLevelMs = performance.now() - levelStartRealTime;
     if (deathFlashTimer > 0) deathFlashTimer--;
@@ -287,6 +292,12 @@ EL.Engine = (function () {
     emit('pauseChanged', paused);
   }
 
+  function requestEcho() {
+    if (!running || paused || levelComplete || !level) return;
+    if (cycleStep < 10) return; // avoid an accidental near-zero-length echo
+    manualEchoRequested = true;
+  }
+
   function restartRoom() { resetLevelState(); }
 
   function startLevel(idx) {
@@ -299,7 +310,7 @@ EL.Engine = (function () {
 
   return {
     on, emit,
-    resetLevelState, fixedUpdate, togglePause, restartRoom, startLevel, stop,
+    resetLevelState, fixedUpdate, togglePause, restartRoom, startLevel, stop, requestEcho,
     moverRect, getSolids,
     get level() { return level; },
     get levelIndex() { return levelIndex; },

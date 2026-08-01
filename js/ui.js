@@ -139,8 +139,11 @@ EL.UI = (function () {
         document.getElementById('hint-banner').textContent = E.level.hint;
         document.getElementById('hint-banner').classList.remove('hidden');
       }
+      if (e.code === 'KeyQ') E.requestEcho();
       if (e.code === 'Escape' && !screens.game.classList.contains('hidden')) E.togglePause();
     });
+
+    document.getElementById('create-echo-btn').addEventListener('click', () => E.requestEcho());
 
     document.getElementById('sfx-volume').addEventListener('input', (e) => {
       EL.Audio.setSfxVolume(Number(e.target.value) / 100);
