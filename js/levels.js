@@ -160,5 +160,31 @@ window.EL = window.EL || {};
       hint: 'Bank an echo on each plate, push the box onto the middle plate, then make your final run.',
       par: { time: 90, echoes: 4 },
     },
+ {
+      name: '10 · The Convergence',
+      cycleSeconds: 16,
+      spawn: { x: 40, y: 350 },
+      exit: { x: 690, y: 352, w: 40, h: 48 },
+      platforms: [GROUND],
+      movers: [],
+      buttons: [
+        { id: 'pLaserA', x: 110, y: 380, w: 40, h: 20 },
+        { id: 'pLaserB', x: 165, y: 380, w: 40, h: 20 },
+        { id: 'pOverlapA', x: 280, y: 380, w: 35, h: 20 },
+        { id: 'pOverlapB', x: 420, y: 380, w: 35, h: 20 },
+        { id: 'pAir', x: 530, y: 260, w: 35, h: 20 },
+      ],
+      doors: [
+        { id: 'doorOverlap', x: 490, y: 0, w: 20, h: 400, requires: ['pOverlapA', 'pOverlapB'] },
+      ],
+      lasers: [
+        { id: 'l1', x1: 225, y1: 0, x2: 225, y2: 400, requires: 'pLaserA' },
+        { id: 'l2', x1: 240, y1: 0, x2: 240, y2: 400, requires: 'pLaserB' },
+        { id: 'l3', x1: 650, y1: 0, x2: 650, y2: 400, requires: 'pAir' },
+      ],
+      boxes: [{ id: 'b1', x: 60, y: 366, w: 34, h: 34 }],
+      hint: 'One echo can pull double duty. Two must overlap for barely a second. One must freeze mid-air.',
+      par: { time: 110, echoes: 4 },
+    },
   ];
 })();
