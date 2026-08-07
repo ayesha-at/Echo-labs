@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -15,7 +15,7 @@
       <h1 class="title">ECHO<span>LABS</span></h1>
       <p class="subtitle">every action leaves a ghost</p>
       <nav class="menu-list">
-        <button class="menu-btn" data-action="play">▶ Play</button>
+        <button class="menu-btn" data-action="play">▶Play</button>
         <button class="menu-btn" data-action="levels">Level Select</button>
         <button class="menu-btn" data-action="settings">Settings</button>
         <button class="menu-btn" data-action="credits">Credits</button>
@@ -102,7 +102,27 @@
       </div>
     </section>
 
-  </div>
+
+
+    <!-- ========================= GAME COMPLETE ========================= -->
+    <section id="screen-complete" class="screen hidden">
+      <canvas id="confetti-canvas"></canvas>
+      <div class="complete-inner">
+        <h1 class="complete-title">
+          <span class="complete-glitch" data-text="GAME COMPLETE">GAME COMPLETE</span>
+        </h1>
+        <p class="complete-subtitle">You escaped every echo of yourself.</p>
+        <div class="complete-stats">
+          <div class="complete-stat"><span id="gc-levels">0</span><label>Levels Cleared</label></div>
+          <div class="complete-stat"><span id="gc-stars">0 / 0</span><label>Stars Earned</label></div>
+          <div class="complete-stat"><span id="gc-time">00:00</span><label>Total Time</label></div>
+        </div>
+        <div class="menu-list complete-actions">
+          <button class="menu-btn" data-action="replay-final">Replay Final Level</button>
+          <button class="menu-btn ghost-btn" data-action="back-to-menu">Back to Menu</button>
+        </div>
+      </div>
+    </section>  </div>
 
   <script src="js/utils.js"></script>
   <script src="js/ease.js"></script>
@@ -111,6 +131,7 @@
   <script src="js/save.js"></script>
   <script src="js/levels.js"></script>
   <script src="js/particles.js"></script>
+  <script src="js/confetti.js"></script>
   <script src="js/camera.js"></script>
   <script src="js/transitions.js"></script>
   <script src="js/engine.js"></script>

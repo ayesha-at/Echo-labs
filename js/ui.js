@@ -1,4 +1,4 @@
-// ============================================================
+﻿// ============================================================
 // UI — DOM screen management, HUD, menus, and the level-complete
 // star reveal animation. Wires user input to EL.Engine.
 // ============================================================
@@ -13,6 +13,7 @@ EL.UI = (function () {
     settings: document.getElementById('screen-settings'),
     credits: document.getElementById('screen-credits'),
     game: document.getElementById('screen-game'),
+    complete: document.getElementById('screen-complete'),
   };
 
   function showScreen(name) {
@@ -69,6 +70,33 @@ EL.UI = (function () {
     }
   }
 
+
+  function isFinalLevel() {
+    return E.levelIndex >= 0 && E.levelIndex >= EL.Levels.length - 1;
+  }
+
+  function showGameComplete() {
+    const save = EL.Save.get();
+    const total = EL.Levels.length;
+    const cleared = Object.keys(save.stars).filter((k) => {
+      const idx = Number(k);
+      return Number.isFinite(idx) && idx < total && (save.stars[k] || 0) > 0;
+    }).length;
+    const earned = Object.values(save.stars).reduce((s, v) => s + (Number(v) || 0), 0);
+    const maxStars = total * 3;
+    let totalSec = 0;
+    Object.values(save.bestTime).forEach((t) => { if (Number.isFinite(t)) totalSec += t; });
+    const mm = Math.floor(totalSec / 60).toString().padStart(2, '0');
+    const ss = Math.floor(totalSec % 60).toString().padStart(2, '0');
+    document.getElementById('gc-levels').textContent = cleared;
+    document.getElementById('gc-stars').textContent = `${earned} / ${maxStars}`;
+    document.getElementById('gc-time').textContent = `${mm}:${ss}`;
+    EL.Confetti.init();
+    showScreen('complete');
+    EL.Confetti.start();
+    try { EL.Audio.play('success'); } catch (e) {}
+  }
+
   function bindEngineEvents() {
     E.on('levelComplete', ({ timeSec, echoesUsed, stars }) => {
       const mm = Math.floor(timeSec / 60).toString().padStart(2, '0');
@@ -77,12 +105,22 @@ EL.UI = (function () {
       document.getElementById('lc-echoes').textContent = `Echoes Used: ${echoesUsed}`;
       revealStars(stars);
       document.getElementById('level-complete-overlay').classList.remove('hidden');
+      if (isFinalLevel()) {
+        // auto-celebrate a beat after the per-level overlay so players see both
+        setTimeout(() => {
+          if (E.levelIndex >= EL.Levels.length - 1) {
+            document.getElementById('level-complete-overlay').classList.add('hidden');
+            E.stop();
+            EL.Audio.stopMusic();
+            showGameComplete();
+          }
+        }, 1800);
+      }
     });
     E.on('pauseChanged', (paused) => {
       document.getElementById('pause-overlay').classList.toggle('hidden', !paused);
     });
   }
-
   function bindButtons() {
     document.querySelectorAll('[data-action]').forEach((el) => {
       el.addEventListener('click', () => {
@@ -102,6 +140,7 @@ EL.UI = (function () {
             showScreen('credits');
             break;
           case 'back-to-menu':
+            if (EL.Confetti && EL.Confetti.isActive()) EL.Confetti.stop();
             showScreen('menu');
             break;
           case 'reset-progress':
@@ -120,14 +159,21 @@ EL.UI = (function () {
           case 'quit-to-menu':
             E.stop();
             EL.Audio.stopMusic();
+            if (EL.Confetti && EL.Confetti.isActive()) EL.Confetti.stop();
             showScreen('menu');
             break;
           case 'replay-level':
+            if (EL.Confetti && EL.Confetti.isActive()) EL.Confetti.stop();
             goToLevel(E.levelIndex);
             break;
           case 'next-level':
             if (E.levelIndex + 1 < EL.Levels.length) goToLevel(E.levelIndex + 1);
+            else if (isFinalLevel()) { E.stop(); EL.Audio.stopMusic(); showGameComplete(); }
             else { E.stop(); EL.Audio.stopMusic(); showScreen('menu'); }
+            break;
+          case 'replay-final':
+            if (EL.Confetti && EL.Confetti.isActive()) EL.Confetti.stop();
+            goToLevel(EL.Levels.length - 1);
             break;
         }
       });

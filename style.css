@@ -1,4 +1,4 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
+﻿* { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
   --cyan: #2ee6d6;
@@ -295,4 +295,128 @@ canvas {
 #game-footer {
   color: #565b8a;
   font-size: 0.75rem;
+}
+
+/* ---------------- Game Complete ---------------- */
+#screen-complete {
+  position: relative;
+  min-height: 540px;
+  width: 800px;
+  max-width: 100%;
+  padding: 30px 20px 40px;
+  background: radial-gradient(circle at 50% 30%, rgba(176,107,255,0.18), transparent 65%),
+              radial-gradient(circle at 20% 80%, rgba(46,230,214,0.12), transparent 60%),
+              var(--panel);
+  border: 1px solid rgba(176,107,255,0.45);
+  border-radius: 10px;
+  overflow: hidden;
+}
+#screen-complete #confetti-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.complete-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: completeRise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes completeRise {
+  from { opacity: 0; transform: translateY(18px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.complete-title {
+  font-size: 2.8rem;
+  letter-spacing: 8px;
+  margin: 16px 0 0;
+}
+.complete-glitch {
+  position: relative;
+  color: var(--cyan);
+  text-shadow: 0 0 10px var(--cyan), 0 0 28px rgba(46,230,214,0.6);
+  animation: completeBloom 2.8s ease-in-out infinite;
+}
+.complete-glitch::before,
+.complete-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+.complete-glitch::before {
+  color: var(--pink);
+  transform: translate(2px, 0);
+  animation: glitchX 3.2s steps(2) infinite;
+  opacity: 0.85;
+}
+.complete-glitch::after {
+  color: var(--purple);
+  transform: translate(-2px, 0);
+  animation: glitchY 2.6s steps(2) infinite;
+  opacity: 0.85;
+}
+@keyframes completeBloom {
+  0%, 100% { text-shadow: 0 0 10px var(--cyan), 0 0 28px rgba(46,230,214,0.6); }
+  50%      { text-shadow: 0 0 18px var(--cyan), 0 0 48px rgba(46,230,214,0.85); }
+}
+@keyframes glitchX {
+  0%, 92%, 100% { transform: translate(2px, 0); }
+  93%           { transform: translate(-4px, -1px); }
+  95%           { transform: translate(5px, 1px); }
+}
+@keyframes glitchY {
+  0%, 90%, 100% { transform: translate(-2px, 0); }
+  91%           { transform: translate(4px, 1px); }
+  94%           { transform: translate(-5px, -1px); }
+}
+.complete-subtitle {
+  color: #b7bbe8;
+  font-size: 0.95rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+.complete-stats {
+  display: flex;
+  gap: 22px;
+  margin: 6px 0 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.complete-stat {
+  min-width: 150px;
+  padding: 14px 16px;
+  background: rgba(5,6,15,0.55);
+  border: 1px solid rgba(46,230,214,0.45);
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 0 18px rgba(46,230,214,0.08) inset;
+}
+.complete-stat span {
+  color: var(--cyan);
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(46,230,214,0.6);
+  letter-spacing: 1px;
+}
+.complete-stat label {
+  color: #8b90c9;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.complete-actions {
+  margin-top: 4px;
 }
