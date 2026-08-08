@@ -107,21 +107,6 @@ js/
 other directly — so you can swap out rendering or add new effects without
 touching the physics/puzzle logic.
 
-## A note on scope
-
-You described 20–30 handcrafted levels — I built the full engine plus 9
-levels that walk through every mechanic and difficulty beat you listed
-(tutorial → moving platforms → lasers → 2 echoes → 3 echoes → 5-echo
-finale). Getting to your full 20–30 is now just a matter of adding more
-entries to the `LEVELS` array in `game.js` — no engine changes needed. See
-below for the format.
-
-I also haven't been able to hands-on playtest exact jump distances/timing
-in a real browser, so a couple of the trickier levels (7 and 9, which
-involve timed jumps onto moving elevators) may need small tuning — nudge
-`distance`/`period` on the mover, or move a platform a few pixels, if a jump
-feels a hair too tight or too loose.
-
 ## Level format (for adding more levels)
 
 Each entry in the `EL.Levels` array in `js/levels.js` looks like this:
