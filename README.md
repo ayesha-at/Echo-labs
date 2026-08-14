@@ -1,163 +1,137 @@
 # Echo Labs
 
-A puzzle-platformer about escaping your own past. Every 10 seconds your
-actions are recorded — when the timer runs out, a translucent ghost clone
-starts repeating exactly what you just did, forever, while you take control
-of your real body again. Use up to 5 echoes at once to hold plates, block
-lasers, and open doors for your current self.
+> **A puzzle-platformer about escaping your own past.**
 
-🎮 **[Play Live Demo Here](https://ayesha-at.github.io/Echo-labs/)**
+Every **10 seconds**, your actions are recorded. When time runs out, a translucent ghost clone replays your exact actions forever while you regain control of your body. Coordinate with up to **5 echoes** simultaneously to press plates, block deadly lasers, and navigate past security doors.
 
-Built entirely from scratch: no engine, no frameworks, no build step — just
-`index.html` + `style.css` + `game.js` and the Canvas 2D API.
+---
 
-## How to run
+## 🎮 Quick Links
 
-Fully **extract** this folder from any zip first (don't open `index.html`
-from inside a zip — the browser can't load `style.css`/`game.js`/`assets/`
-that way). Then just double-click `index.html`, or serve it locally:
+* 🕹️ **[Play the Live Demo](https://ayesha-at.github.io/Echo-labs/)**
+* 🛠️ **Tech Stack:** `HTML5` • `CSS3` • `JavaScript (ES6)` • `Canvas 2D API`
+* ⚡ **Dependencies:** None! No engines, no frameworks, no build step.
 
-```
+---
+
+## 🚀 Getting Started
+
+> **Important:** Fully **extract** the repository before running. Opening `index.html` directly from a `.zip` archive will cause path resolution errors for CSS, JS, and asset files.
+
+### 1️⃣ Option A: Direct Launch
+Double-click `index.html` in your browser.
+
+### 2️⃣ Option B: Local Development Server
+For optimal audio and module performance, serve locally via Python:
+
+```bash
+# Run a local HTTP server
 python3 -m http.server 8000
 ```
-and visit `http://localhost:8000`.
+Then navigate to **`http://localhost:8000`** in your browser.
 
-## Controls
+---
 
-- **A / D** — move
-- **Space** (or W / Up) — jump
-- **E** — interact (visually highlights your character; wire up to specific
-  puzzle objects as you add them — see "Extending" below)
-- **R** — restart the current room instantly
-- **Esc** — pause
+## 🕹️ Controls & Inputs
 
-## The core mechanic, precisely
+| Action | Desktop Key | Mobile / Touch |
+| :--- | :--- | :--- |
+| **Move Left / Right** | <kbd>A</kbd> / <kbd>D</kbd> | On-Screen Left/Right Arrows |
+| **Jump** | <kbd>Space</kbd> / <kbd>W</kbd> / <kbd>▲</kbd> | On-Screen Jump Button |
+| **Interact** | <kbd>E</kbd> | On-Screen Action Button |
+| **Restart Room** | <kbd>R</kbd> | Top-Right Quick Reset |
+| **Pause** | <kbd>Esc</kbd> | Top-Right Pause Button |
 
-- Each level has a **10-second cycle** (configurable per level).
-- While the cycle runs, your live position is recorded every physics step.
-- When the cycle ends: that recording becomes a permanent **echo** that
-  loops forever, replaying the exact same movement every cycle from then on.
-  You respawn at the start and begin a fresh recording.
-- Up to **5 echoes** can exist at once; a 6th bumps the oldest one out.
-- Touching a laser only resets your **current, in-progress run** — any
-  echoes you've already banked stay put. (Full room reset is `R`.)
-- Moving platforms/elevators are driven by time-within-the-current-cycle,
-  not real elapsed time — so they line up identically every loop and your
-  echoes stay in sync with them.
+> 📱 **Mobile Support:** On-screen controls automatically render via feature detection (`js/touch-controls.js`). Touch interactions emit synthetic keyboard events—zero code changes required!
 
-## What's included
+---
 
-- Full main menu → level select → settings → credits → gameplay flow, with
-  animated screen transitions (fade + slide, spring easing)
-- 9 handcrafted levels covering the whole progression you described:
-  tutorial → moving platforms → lasers → 2 echoes required → 3 echoes →
-  final level using all 5
-- Pressure plates, locked doors (AND logic across multiple plates), lasers
-  gated by plates, pushable boxes, moving platforms, and a vertical elevator
-- Neon cyan/purple canvas rendering (no image assets — everything is drawn
-  procedurally with glow effects) with:
-  - **Particles** — jump/landing dust, laser-death sparks, echo-creation
-    bursts, box-push dust, exit-clear confetti, and drifting ambient dust
-    motes in the background
-  - **Screen shake** — trauma-based camera shake on death, echo creation,
-    door unlocks, and level completion
-  - **Easing curves** (`js/ease.js`) — quad/cubic/back/elastic/bounce —
-    driving the room-transition wipe, the "NEW ECHO CREATED" pop-in, the
-    breathing exit-door bloom, and CSS button/screen animations
-  - **Bloom pulses** — expanding glow rings on button activation, door
-    unlocks, and echo spawns; pulsing glow on held plates and the exit
-  - **Transition animations** — a glitchy canvas wipe between rooms
-    (`js/transitions.js`), plus CSS fade/slide entrances for every menu
-    screen and a staggered star pop-in on the level-complete screen
-- Synthesized sound effects (`jump.wav`, `interact.wav`, `echo.wav` — plays
-  when a new echo is created, `success.wav`, `death.wav`) and a looping
-  ambient lab drone (`ambient.mp3`)
-- Star rating (1–3) per level based on time and echo count vs. par
-- **Autosave** via `localStorage` — unlocked levels and best stars/times
-  persist between sessions on the same browser/machine
-- Pause menu, restart-room, level-complete screen with time/echoes/stars
-
-## Code organization
-
-The engine is split into focused modules under `js/`, loaded as plain
-`<script>` tags (no bundler, no build step — still just double-click
-`index.html`). Each file attaches to a shared `window.EL` namespace so they
-can reference each other without any module system:
+## ⏱️ Core Mechanics
 
 ```
-js/
-├── utils.js        # rect overlap, clamp, lerp, small math helpers
-├── ease.js          # easing curve library (quad/cubic/back/elastic/bounce)
-├── input.js         # keyboard state tracking
-├── audio.js         # sfx/music loading with graceful fallback + volume
-├── save.js          # localStorage autosave
-├── levels.js         # the LEVELS data array — edit this to add levels
-├── particles.js      # particle pool: dust/sparks/confetti + bloom rings
-├── camera.js         # trauma-based screen shake
-├── transitions.js    # canvas wipe transition between rooms
-├── engine.js          # physics, echo recording/playback, puzzle logic
-├── render.js         # all canvas drawing (glow, particles, shake, wipe)
-├── ui.js             # DOM screens, HUD, menus, level-complete stars
-└── main.js           # bootstraps canvas + runs the fixed-timestep loop
+ [ LIVE PLAYER ] ──( 10 Seconds Pass )──> [ RECORDING COMPLETE ]
+        │                                          │
+        ▼                                          ▼
+ [ RESPAWN AT START ] <──( Loop Forever )── [ BANK ECHO #1 ]
 ```
 
-`engine.js` is the only file that touches simulation state; it fires events
-(`levelComplete`, `echoCreated`, `pauseChanged`, `levelReset`) that
-`ui.js` and the juice systems listen to, rather than reaching into each
-other directly — so you can swap out rendering or add new effects without
-touching the physics/puzzle logic.
+* **10-Second Cycles:** Every level runs on a configurable time loop.
+* **Echo Loops:** When the cycle resets, your movement history becomes a permanent **echo** running in parallel.
+* **Echo Limit:** You can maintain up to **5 active echoes**. Spawning a 6th automatically overwrites the oldest echo.
+* **Laser Hazards:** Touching a laser resets only your *current live run*—your banked echoes remain intact!
+* **Deterministic Timing:** Platform and elevator positions align strictly with cycle time, ensuring zero desync with your echoes.
 
-## Level format (for adding more levels)
+---
 
-Each entry in the `EL.Levels` array in `js/levels.js` looks like this:
+## ⚡ Game Features & Polish
 
-```js
-{
-  name: '10 · Your Level Name',
-  cycleSeconds: 10,                                  // echo loop length
-  spawn: { x: 40, y: 350 },
-  exit: { x: 742, y: 352, w: 40, h: 48 },
-  platforms: [ { x, y, w, h }, ... ],                 // static solid ground
-  movers: [ { id, x, y, w, h, axis: 'x'|'y', distance, period } ],
-  buttons: [ { id, x, y, w, h } ],                    // pressure plates
-  doors: [ { id, x, y, w, h, requires: ['p1', 'p2'] } ], // ALL must be active
-  lasers: [ { id, x1, y1, x2, y2, requires: 'p1' } ],  // omit `requires` = always on
-  boxes: [ { id, x, y, w, h } ],                      // pushable by the live player
-  hint: 'Shown briefly when the level starts.',
-  par: { time: 20, echoes: 2 },                       // for star rating
-}
-```
+<details>
+<summary><b>✨ Juice & Visual Effects (Click to Expand)</b></summary>
 
-Just append a new object and it appears in Level Select automatically once
-unlocked.
+* **Procedural Canvas Graphics:** Glowing neon cyan/purple aesthetic with zero external sprite dependencies.
+* **Particle Systems:** Contextual dust on jumps/landings, laser-death sparks, echo creation bursts, and ambient drifting dust motes.
+* **Trauma-Based Screen Shake:** Dynamic camera impact on deaths, echo spawns, door triggers, and level clears.
+* **Custom Easing Library:** Dynamic Quad, Cubic, Back, Elastic, and Bounce curves driving UI transitions and in-game mechanics.
+* **Screen Transitions:** Glitchy canvas wipe sequences paired with spring-eased CSS menu animations.
+</details>
 
-## Project structure
+<details>
+<summary><b>🎵 Audio & Progression Systems (Click to Expand)</b></summary>
+
+* **Synthesized Audio:** Custom sound effects (`jump`, `interact`, `echo`, `success`, `death`) and ambient lab drones with dynamic fallback.
+* **Level Progression:** 9 handcrafted levels spanning basic tutorials to complex 5-echo puzzle chains.
+* **Persistence:** Automatic saving via `localStorage` tracking best clearance times, star ratings (1–3), and unlocked levels.
+</details>
+
+---
+
+## 🛠️ Code Architecture
+
+The engine is modularized into lightweight, standalone scripts under `js/`. Modules register under a unified `window.EL` global context to avoid bundle overhead.
 
 ```
 echo-labs/
-├── index.html      # menus, HUD, overlays
-├── style.css       # neon dark-lab visual theme + all CSS animations
-├── js/             # engine modules — see "Code organization" above
-│   ├── utils.js
-│   ├── ease.js
-│   ├── input.js
-│   ├── audio.js
-│   ├── save.js
-│   ├── levels.js
-│   ├── particles.js
-│   ├── camera.js
-│   ├── transitions.js
-│   ├── engine.js
-│   ├── render.js
-│   ├── ui.js
-│   └── main.js
-├── assets/         # generated SFX + ambient music (optional — game runs
-│                   # silently if any file is missing)
-│   ├── jump.wav
-│   ├── interact.wav
-│   ├── echo.wav
-│   ├── success.wav
-│   ├── death.wav
-│   └── ambient.mp3
-└── README.md
+├── 📄 index.html        # DOM layout, UI overlays, HUD
+├── 🎨 style.css         # Neon lab theme & CSS keyframe animations
+├── 📁 js/
+│   ├── 🛠️ utils.js       # Math helpers, collision bounds, clamps
+│   ├── 📈 ease.js        # Easing curve engine
+│   ├── ⌨️ input.js       # Keyboard event listener state
+│   ├── 🔊 audio.js       # WebAudio API controller & fallback
+│   ├── 💾 save.js        # LocalStorage persistence manager
+│   ├── 🗺️ levels.js       # Level configuration data array
+│   ├── 💥 particles.js   # Particle pool, bloom rings, and effects
+│   ├── 🎥 camera.js      # Trauma-based camera shake engine
+│   ├── 🎬 transitions.js # Canvas glitch room wipes
+│   ├── ⚙️ engine.js     # Physics, cycle ticks, echo recording/playback
+│   ├── 🎨 render.js     # Procedural drawing, glow layers, canvas pipeline
+│   ├── 🖥️ ui.js         # HUD updates, menu navigation, dynamic stars
+│   ├── 📱 touch-controls.js # On-screen mobile input overlays
+│   └── 🚀 main.js       # Canvas bootstrap & fixed-timestep loop
+└── 📁 assets/           # SFX and background audio
+```
+
+> 💡 **Decoupled Event System:** `engine.js` manages state and dispatches events (`levelComplete`, `echoCreated`, `pauseChanged`) listened to by `ui.js` and visual sub-systems. Physics logic can be altered without breaking renderers or UI.
+
+---
+
+## 📐 Level Creation Guide
+
+Adding new levels is as simple as appending a JSON definition to the `EL.Levels` array in `js/levels.js`:
+
+```javascript
+{
+  name: '10 · Echo Chamber',
+  cycleSeconds: 10,
+  spawn: { x: 40, y: 350 },
+  exit: { x: 742, y: 352, w: 40, h: 48 },
+  platforms: [ { x: 0, y: 400, w: 800, h: 20 } ],
+  movers: [ { id: 'm1', x: 200, y: 300, w: 80, h: 16, axis: 'x', distance: 100, period: 4 } ],
+  buttons: [ { id: 'p1', x: 150, y: 390, w: 32, h: 10 } ],
+  doors: [ { id: 'd1', x: 600, y: 300, w: 20, h: 100, requires: ['p1'] } ],
+  lasers: [ { id: 'l1', x1: 400, y1: 0, x2: 400, y2: 400, requires: 'p1' } ], // Off when p1 pressed
+  boxes: [ { id: 'b1', x: 100, y: 360, w: 30, h: 30 } ],
+  hint: 'Use an echo to keep the pressure plate held!',
+  par: { time: 20, echoes: 2 }
+}
 ```
