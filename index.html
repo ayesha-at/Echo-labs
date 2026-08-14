@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -76,21 +76,6 @@
       <div id="canvas-container">
         <canvas id="gameCanvas" width="800" height="450"></canvas>
 
-        <div id="touch-controls" class="hidden">
-          <div id="touch-dpad">
-            <button id="touch-left" class="touch-btn touch-btn-dpad" aria-label="Move left">◀</button>
-            <button id="touch-right" class="touch-btn touch-btn-dpad" aria-label="Move right">▶</button>
-          </div>
-          <div id="touch-utility">
-            <button id="touch-pause" class="touch-btn touch-btn-util" aria-label="Pause">⏸</button>
-            <button id="touch-restart" class="touch-btn touch-btn-util" aria-label="Restart room">⟳</button>
-          </div>
-          <div id="touch-action-cluster">
-            <button id="touch-interact" class="touch-btn touch-btn-interact" aria-label="Interact">E</button>
-            <button id="touch-jump" class="touch-btn touch-btn-jump" aria-label="Jump">JUMP</button>
-          </div>
-        </div>
-
         <div id="hint-banner" class="hidden"></div>
 
         <div id="pause-overlay" class="overlay hidden">
@@ -109,6 +94,22 @@
             <button class="menu-btn ghost-btn" data-action="replay-level">Replay</button>
             <button class="menu-btn" data-action="next-level">Next Level</button>
           </div>
+        </div>
+      </div>
+
+      <!-- Mobile controls live in their own dock below the game so they never cover gameplay. -->
+      <div id="touch-controls" class="hidden">
+        <div id="touch-dpad">
+          <button id="touch-left" class="touch-btn touch-btn-dpad" aria-label="Move left">◀</button>
+          <button id="touch-right" class="touch-btn touch-btn-dpad" aria-label="Move right">▶</button>
+        </div>
+        <div id="touch-utility">
+          <button id="touch-pause" class="touch-btn touch-btn-util" aria-label="Pause">⏸</button>
+          <button id="touch-restart" class="touch-btn touch-btn-util" aria-label="Restart room">⟳</button>
+        </div>
+        <div id="touch-action-cluster">
+          <button id="touch-interact" class="touch-btn touch-btn-interact" aria-label="Interact">E</button>
+          <button id="touch-jump" class="touch-btn touch-btn-jump" aria-label="Jump">JUMP</button>
         </div>
       </div>
 
