@@ -240,6 +240,138 @@ canvas {
   box-shadow: 0 0 30px rgba(46,230,214,0.08) inset;
 }
 
+/* ---------------- Touch Controls (mobile) ---------------- */
+#touch-controls {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+#touch-dpad {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  display: flex;
+  gap: 10px;
+}
+#touch-utility {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+}
+.touch-btn {
+  pointer-events: auto;
+  font-family: inherit;
+  font-weight: bold;
+  color: var(--cyan);
+  background: rgba(13,15,34,0.78);
+  border: 1px solid var(--cyan);
+  border-radius: 50%;
+  text-shadow: 0 0 6px rgba(46,230,214,0.6);
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+  transition: background 0.12s ease, transform 0.12s ease;
+}
+.touch-btn:active,
+.touch-btn.active {
+  background: rgba(46,230,214,0.35);
+  transform: scale(0.92);
+}
+.touch-btn-dpad {
+  width: 56px;
+  height: 56px;
+  font-size: 1.4rem;
+}
+.touch-btn-util {
+  width: 38px;
+  height: 38px;
+  font-size: 0.85rem;
+  border-color: var(--purple);
+  color: var(--purple);
+  text-shadow: 0 0 6px rgba(176,107,255,0.6);
+}
+#touch-action-cluster {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+.touch-btn-interact {
+  width: 42px;
+  height: 42px;
+  font-size: 0.95rem;
+  border-color: var(--cyan);
+}
+.touch-btn-jump {
+  width: 72px;
+  height: 72px;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  border-color: var(--pink);
+  color: var(--pink);
+  text-shadow: 0 0 6px rgba(255,95,162,0.6);
+}
+
+body.touch-device #game-footer { display: none; }
+
+/* ---------------- Mobile / portrait breakpoint ---------------- */
+@media (max-width: 480px), (max-height: 700px) {
+  html, body { overflow-y: auto; overflow-x: hidden; align-items: flex-start; }
+  #app { padding: 10px; }
+
+  /* A 16:9-ish landscape canvas can't fill a portrait screen without
+     distorting or cropping the game, so some empty space below it is
+     unavoidable — center the HUD+canvas+footer block in the viewport
+     instead of leaving it packed at the top with all the dead space
+     dumped below. min-height only kicks in when content actually fits
+     (it does here), so this never fights the overflow-y:auto above on
+     short landscape phones where content might not fit. */
+  #screen-game.screen {
+    min-height: calc(100vh - 20px);
+    justify-content: center;
+  }
+
+  .title { font-size: 2.1rem; margin-top: 12px; }
+  .subtitle { font-size: 0.7rem; margin-bottom: 6px; }
+  .menu-list { width: 220px; gap: 8px; }
+  .menu-btn { padding: 10px 14px; font-size: 0.9rem; }
+  .footer-hint { margin-top: 16px; font-size: 0.65rem; padding: 0 8px; }
+
+  #hud { padding: 5px 8px; font-size: 0.7rem; }
+  #hud-timer { font-size: 1.05rem; }
+  #create-echo-btn { font-size: 0.65rem; padding: 4px 8px; }
+
+  /* The canvas is fixed at a 16:9-ish (800x450) ratio. Sizing it by width
+     (the default, for desktop) leaves most of a tall phone screen empty
+     below it. In portrait/short viewports, size it by available height
+     instead so it actually fills the screen — the min() falls back to the
+     width-based size on very narrow-but-tall devices so it never overflows
+     sideways. */
+  #canvas-container {
+    width: auto;
+    max-width: 100%;
+    height: min(50vh, calc((100vw - 20px) * 0.5625));
+    margin: 0 auto;
+  }
+  canvas { width: auto; height: 100%; max-width: 100%; }
+
+  /* Bigger, more thumb-friendly hit targets once screen real estate
+     is tight — small buttons are the first thing that gets mis-tapped. */
+  .touch-btn-dpad { width: 60px; height: 60px; font-size: 1.5rem; }
+  .touch-btn-jump { width: 76px; height: 76px; font-size: 0.85rem; }
+  .touch-btn-interact { width: 46px; height: 46px; font-size: 1rem; }
+  .touch-btn-util { width: 42px; height: 42px; font-size: 0.9rem; }
+  #touch-dpad { left: 8px; bottom: 8px; gap: 8px; }
+  #touch-action-cluster { right: 8px; bottom: 8px; gap: 8px; }
+  #touch-utility { top: 6px; right: 6px; gap: 6px; }
+}
+
 #hint-banner {
   position: absolute;
   top: 10px;
@@ -263,6 +395,7 @@ canvas {
 .overlay {
   position: absolute;
   inset: 0;
+  z-index: 10;
   background: rgba(5,6,15,0.92);
   border-radius: 6px;
   display: flex;
