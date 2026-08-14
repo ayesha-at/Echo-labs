@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>Echo Labs</title>
 <link rel="stylesheet" href="style.css" />
 </head>
@@ -76,6 +76,21 @@
       <div id="canvas-container">
         <canvas id="gameCanvas" width="800" height="450"></canvas>
 
+        <div id="touch-controls" class="hidden">
+          <div id="touch-dpad">
+            <button id="touch-left" class="touch-btn touch-btn-dpad" aria-label="Move left">◀</button>
+            <button id="touch-right" class="touch-btn touch-btn-dpad" aria-label="Move right">▶</button>
+          </div>
+          <div id="touch-utility">
+            <button id="touch-pause" class="touch-btn touch-btn-util" aria-label="Pause">⏸</button>
+            <button id="touch-restart" class="touch-btn touch-btn-util" aria-label="Restart room">⟳</button>
+          </div>
+          <div id="touch-action-cluster">
+            <button id="touch-interact" class="touch-btn touch-btn-interact" aria-label="Interact">E</button>
+            <button id="touch-jump" class="touch-btn touch-btn-jump" aria-label="Jump">JUMP</button>
+          </div>
+        </div>
+
         <div id="hint-banner" class="hidden"></div>
 
         <div id="pause-overlay" class="overlay hidden">
@@ -137,6 +152,7 @@
   <script src="js/engine.js"></script>
   <script src="js/render.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/touch-controls.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
